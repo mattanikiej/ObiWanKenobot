@@ -18,19 +18,23 @@ class Model:
     #
     # CONSTRUCTORS
     #
-    def __init__(self):
+    def __init__(self, data_path='data/obiwanintents.json'):
         """
         Constructor for the model
         """
+        self.data_path_ = data_path  # path where data is located
         self.data_ = None  # data that the model uses to train on
-        self.model_ = None  # model that takes in user input and outputs intent
         self.label_map_ = None  # maps output to label
         self.responses_ = None  # maps label to list of responses
+
         self.tokenizer_ = None  # tokenizer used to change a string to a vector with numbers
         self.input_shape_ = None  # shape of the input, needed for padding user inputs
 
-        self.__load_data()
-        self.__create_model()
+        self.model_ = None  # model that takes in user input and outputs intent
+
+        self.__load_data(data_path)  # initializes: data_ label_map_ responses_
+        self.__tokenize_initial_data()  # initializes: tokenizer: input_shape_
+        self.__create_model()  # initializes: model_
 
     def __str__(self):
         """
@@ -50,7 +54,7 @@ class Model:
         """
         return re.sub(r'[^\w\s]', '', string).lower()
 
-    def __load_data(self, name='data/obiwanintents.json'):
+    def __load_data(self, name):
         """
         loads in the data from the intents file,
         and returns a pandas data frame and sets the data and label_map members
