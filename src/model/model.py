@@ -117,7 +117,6 @@ class Model:
         Creates the model
         :param embedding_dim: number of dimensions for embedding layer
         """
-        X = self.__tokenize_initial_data()
 
         inputs = keras.Input(self.input_shape_, name='input')
 
