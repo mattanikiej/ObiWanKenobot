@@ -1,3 +1,7 @@
+# Version 1.0.1
+* bot has been deployed on AWS instead of Heroku
+* removed Procfile
+
 # Version 1.0.0
 * bot has been deployed!!
 * Procfile added for deployment
