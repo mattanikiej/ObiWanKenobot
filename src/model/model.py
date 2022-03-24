@@ -31,6 +31,12 @@ class Model:
         self.__load_data()
         self.__create_model()
 
+    def __str__(self):
+        """
+        String conversion of model
+        """
+        return self.model_.summary()
+
     #
     # PRIVATE FUNCTIONS
     #
@@ -47,7 +53,7 @@ class Model:
         loads in the data from the intents file,
         and returns a pandas data frame and sets the data and label_map members
         """
-        with open('datasets/obiwanintents.json') as file:
+        with open('data/obiwanintents.json') as file:
             data = json.load(file)
 
         # parse through data
@@ -92,14 +98,18 @@ class Model:
         :return: tokenized data
         """
         # allow up to 10000 unique words
-        self.tokenizer = Tokenizer(num_words=10000)
-        self.tokenizer.fit_on_texts(self.data['inputs'])
-        X = self.tokenizer.texts_to_sequences(self.data['inputs'])
+        self.tokenizer_ = Tokenizer(num_words=10000)
+        self.tokenizer_.fit_on_texts(self.data_['inputs'])
+        X = self.tokenizer_.texts_to_sequences(self.data_['inputs'])
         X = pad_sequences(X)
         return X
 
     def __create_model(self, embedding_dim=64):
-        X = self.tokenize_initial_data()
+        """
+        Creates the model
+        :param embedding_dim: number of dimensions for embedding layer
+        """
+        X = self.__tokenize_initial_data()
 
         # get input shape from teh tokenized data
         # shape can change with changes in the data so this is the best way for future proofing the model
@@ -110,7 +120,9 @@ class Model:
         # embedding layer to create a feature map of the initial vector
         lyr = keras.layers.Embedding(input_dim=len(self.tokenizer_.word_index) + 1, output_dim=embedding_dim,
                                      name='embedding')(inputs)
-        # LSTM layer is the best way to understand NLP due to its memory components, so it can understand sequences
+
+        # LSTM layer is the best way to understand NLP,
+        # due to its memory components that allow it to understand sequences
         lyr = keras.layers.LSTM(embedding_dim, return_sequences=True, name='lstm')(lyr)
 
         # flatten to 1D so it's easier on the dense layer
@@ -120,6 +132,29 @@ class Model:
         outputs = keras.layers.Dense(13, activation='softmax', name='output')(lyr)
 
         self.model_ = keras.Model(inputs=inputs, outputs=outputs, name='ObiWan_Kenobot')
-        self.model_.summary()
 
-model = Model()
+        # compiling the model
+        # sparse categorical cross entropy loss since each category is mutually exclusive
+        self.model_.compile(loss="sparse_categorical_crossentropy",
+                            optimizer='adam', metrics=['accuracy'])
+
+    #
+    # PUBLIC FUNCTIONS
+    #
+    def summary(self):
+        """
+        returns the summary of the model
+        :return: summary of the model
+        """
+        return self.model_.summary()
+
+    def train(self):
+        """
+        Trains the model on the given data
+        :return: history of losses and metrics
+        """
+        X = self.__tokenize_initial_data()
+        return self.model_.fit(X, self.data_['labels'],
+                               epochs=10000,
+                               callbacks=[tf.keras.callbacks.EarlyStopping(patience=5, monitor='loss')])
+
