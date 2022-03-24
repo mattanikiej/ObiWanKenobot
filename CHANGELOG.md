@@ -5,6 +5,7 @@
 * data folder is moved to under source folder
 * Model is now built by specifying data path
 * requirements.txt added
+* bot responds with 'hello' when /obiwan command is used
 
 # Version 0.1.0
 * model.py is finished and fully functional
