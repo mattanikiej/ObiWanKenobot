@@ -1,3 +1,11 @@
+# Version 0.1.0
+* model.py is finished and fully functional
+  * model can be:
+    * printed
+    * trained
+    * saved
+    * loaded
+
 # Version 0.0.3
 * model.py can be trained and printed as a string
 * Model.py renamed to model.py

@@ -26,7 +26,8 @@ class Model:
         self.model_ = None  # model that takes in user input and outputs intent
         self.label_map_ = None  # maps output to label
         self.responses_ = None  # maps label to list of responses
-        self.tokenizer_ = None  # tokenizer used to change strings to vectors with numbers
+        self.tokenizer_ = None  # tokenizer used to change a string to a vector with numbers
+        self.input_shape_ = None  # shape of the input, needed for padding user inputs
 
         self.__load_data()
         self.__create_model()
@@ -35,7 +36,8 @@ class Model:
         """
         String conversion of model
         """
-        return self.model_.summary()
+        self.model_.summary()
+        return ''
 
     #
     # PRIVATE FUNCTIONS
@@ -48,12 +50,13 @@ class Model:
         """
         return re.sub(r'[^\w\s]', '', string).lower()
 
-    def __load_data(self):
+    def __load_data(self, name='data/obiwanintents.json'):
         """
         loads in the data from the intents file,
         and returns a pandas data frame and sets the data and label_map members
+        :param name: name of the file to load
         """
-        with open('data/obiwanintents.json') as file:
+        with open(name) as file:
             data = json.load(file)
 
         # parse through data
@@ -102,6 +105,11 @@ class Model:
         self.tokenizer_.fit_on_texts(self.data_['inputs'])
         X = self.tokenizer_.texts_to_sequences(self.data_['inputs'])
         X = pad_sequences(X)
+
+        # get input shape from the tokenized data
+        # shape can change with changes in the data so this is the best way for future proofing the model
+        self.input_shape_ = X.shape[1]
+
         return X
 
     def __create_model(self, embedding_dim=64):
@@ -111,11 +119,7 @@ class Model:
         """
         X = self.__tokenize_initial_data()
 
-        # get input shape from teh tokenized data
-        # shape can change with changes in the data so this is the best way for future proofing the model
-        input_shape = X.shape[1]
-
-        inputs = keras.Input(input_shape, name='input')
+        inputs = keras.Input(self.input_shape_, name='input')
 
         # embedding layer to create a feature map of the initial vector
         lyr = keras.layers.Embedding(input_dim=len(self.tokenizer_.word_index) + 1, output_dim=embedding_dim,
@@ -123,9 +127,9 @@ class Model:
 
         # LSTM layer is the best way to understand NLP,
         # due to its memory components that allow it to understand sequences
-        lyr = keras.layers.LSTM(embedding_dim, return_sequences=True, name='lstm')(lyr)
+        lyr = keras.layers.LSTM(embedding_dim, name='lstm')(lyr)
 
-        # flatten to 1D so it's easier on the dense layer
+        # flatten to 1D so that it's easier on the dense layer
         lyr = keras.layers.Flatten(name='flatten')(lyr)
 
         # use softmax activation since all the labels are mutually exclusive
@@ -155,6 +159,41 @@ class Model:
         """
         X = self.__tokenize_initial_data()
         return self.model_.fit(X, self.data_['labels'],
-                               epochs=10000,
+                               epochs=100,
                                callbacks=[tf.keras.callbacks.EarlyStopping(patience=5, monitor='loss')])
 
+    def save_model(self, name="model"):
+        """
+        saves the weights to a .ckpt file with the given name to the directory saved_models
+        :param name: name of the file
+        """
+        self.model_.save_weights('saved_models/'+name)
+
+    def load_model(self, name="model"):
+        """
+        loads the weights from the file with the given name
+        :param name: name of the file to load in saved_models/
+        """
+        self.model_.load_weights('saved_models/'+name)
+
+    def chat(self, user_input):
+        """
+        Accepts a string input from the user and returns a response that corresponds to the predicted intent
+        :param user_input: string that the user sends the bot
+        :return: string that the bot responds with
+        """
+        # vectorize input to be able to use in the model
+        user_input = self.__standardize_text(user_input)
+        vec = self.tokenizer_.texts_to_sequences([user_input])
+        vec = [item for i in vec for item in i]  # needs to be flattened for padding
+        vec = pad_sequences([vec], self.input_shape_)
+
+        # get label
+        label = self.model_.predict(vec)
+        label = label.argmax()
+        tag = self.label_map_[label]
+
+        # return a random corresponding response
+        responses = self.responses_[tag]
+        i = np.random.randint(0, len(responses))
+        return responses[i]
