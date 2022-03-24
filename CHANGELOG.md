@@ -1,3 +1,9 @@
+# Version 1.0.0
+* bot has been deployed!!
+* Procfile added for deployment
+* requirements.txt finalized
+* README.md updated
+
 # Version 0.2.1
 * bot now responds to user input
 

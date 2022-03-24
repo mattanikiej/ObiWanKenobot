@@ -6,12 +6,20 @@ This is a chatbot that mimics Jedi Master Obi-Wan Kenobi from Star Wars episodes
 ## Welcome!
 Obi-Wan is the charismatic Jedi Master played by Ewan McGregor in the Star Wars prequel trilogy and features many iconic
 lines such as "Oh no. I'm not brave enough for politics" and "Sith Lords are our specialty." This bot aims to decipher 
-as best it can the user's intention when speaking to it, and respond with a quote that corresponds to that intent.
+as best it can the user's intention when speaking to it, and respond with a quote that corresponds to that intent. As of
+right now, the bot is only available on Discord.
+
+## Adding bot to your Discord server
+This is the simplest part. Make sure you are an admin on whatever server you want to add it to and click this link
+[here](https://discord.com/api/oauth2/authorize?client_id=956584753874743368&permissions=414464609344&scope=bot).
 
 ## How it works
-Currently, the model is made using tensorflow and the data is created by myself and the quotes were taken found from 
-scripts taken from here: https://imsdb.com/. The model features an embedding layer to make each word a fixed length, 
-and LSTM layer to discover sequences and patterns in the inputs.
+The model uses the tensorflow machine learning library to create a text classification model. It then categorizes the
+users input and sends out a random response for that category. To use the bot in your Discord server use the command: 
+   
+__/obiwan message__  
+
+where message is the message you want to send
 
 ## Authors
 Matt Anikiej
