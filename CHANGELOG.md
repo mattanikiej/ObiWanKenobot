@@ -1,3 +1,6 @@
+# Version 0.2.1
+* bot now responds to user input
+
 # Version 0.2.0
 * app is now a discord bot
     * not deployed yet
