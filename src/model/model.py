@@ -1,8 +1,8 @@
 import json
 import re
+import random
 
 import pandas as pd
-import numpy as np
 
 import tensorflow as tf
 from tensorflow import keras
@@ -198,5 +198,5 @@ class Model:
 
         # return a random corresponding response
         responses = self.responses_[tag]
-        i = np.random.randint(0, len(responses))
+        i = random.randint(0, len(responses)-1)
         return responses[i]
