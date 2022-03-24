@@ -21,5 +21,8 @@ __/obiwan message__
 
 where message is the message you want to send
 
+## Sources
+The data file was created myself using quotes found from the scripts found here: https://imsdb.com/
+
 ## Authors
 Matt Anikiej
