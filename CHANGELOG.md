@@ -1,3 +1,8 @@
+# Version 2.1.0
+* fixed apostrophe bug (it just disappeared)
+* changed /obiwan to /obichat since it's not the only feature of the bot anymore
+* removed bug log from repo since there were none anymore
+
 # Version 2.0.1
 * fixed README.md
 

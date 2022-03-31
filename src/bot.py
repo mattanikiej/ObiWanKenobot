@@ -27,18 +27,18 @@ async def on_ready():
     await client.change_presence(status=discord.Status.online, activity=discord.Game("Podracing"))
 
 
-# command /obiwan
+# command /obichat
 @client.command()
-async def obiwan(ctx, *message):
+async def obichat(ctx, *message):
     """
-    Use case: /obiwan <message>
+    Use case: /obichat <message>
     Used to talk to the chat bot by sending a message, and then the bot replies.
     If no message is sent then the bot responds with 'Hello there!'
     :param ctx: context of the client
     :param message: message user sends the bot
     """
     if len(message) == 0:
-        await ctx.send("Hello there! Send me a message after the command: /obiwan message")
+        await ctx.send("Hello there! Send me a message after the command: /obichat message")
     else:
         # message is a tuple of variable length where each word is an index and must be joined into one string
         message_str = ' '.join(message)

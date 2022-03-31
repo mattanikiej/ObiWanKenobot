@@ -18,7 +18,7 @@ This is the simplest part. Make sure you are an admin on whatever server you wan
 The model uses the tensorflow machine learning library to create a text classification model. It then categorizes the
 users input and sends out a random response for that category. To use the bot in your Discord server use the command: 
    
-__/obiwan \<message\>__  
+__/obichat \<message\>__  
 
 where \<message\> is replaced with the message you want to send
 
