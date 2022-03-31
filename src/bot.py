@@ -2,6 +2,9 @@ import discord
 from discord.ext import commands
 from model.model import Model
 import os
+from YTDLSource import YTDLSource
+from time import sleep
+import random
 
 # sets up client and command prefix
 client = commands.Bot(command_prefix='/')
@@ -41,6 +44,58 @@ async def obiwan(ctx, *message):
         message_str = ' '.join(message)
         response = model.chat(message_str)
         await ctx.send(response)
+
+
+# command /obitalk
+@client.command(pass_context=True)
+async def obitalk(ctx):
+    """
+    Use case: /obitalk
+    Used for obiwan to talk in the voice channel the user is currently connected to
+    :param ctx: context of the call
+    """
+
+    # make sure user is connected to a voice chat
+    if not ctx.message.author.voice:
+        await ctx.send("{} is not connected to a voice channel".format(ctx.message.author.name))
+        return
+    else:
+        channel = ctx.message.author.voice.channel
+        await channel.connect()
+
+    # set of urls for the bot to choose from
+    urls = [
+            'https://www.youtube.com/watch?v=iIQUrrbNW_Q&ab_channel=QuoteTheGuy',
+            'https://www.youtube.com/watch?v=58JwbQCnpmA&list=PLlrQRD4Rfv_CM6byFKlMYeBWAs9dWDm_7&index=2&ab_channel=QuoteTheGuy',
+            'https://www.youtube.com/watch?v=Xzbyp8rjGLU&list=PLlrQRD4Rfv_CM6byFKlMYeBWAs9dWDm_7&index=10&ab_channel=QuoteTheGuy',
+            'https://www.youtube.com/watch?v=Pqn3zMghf4A&list=PLlrQRD4Rfv_CM6byFKlMYeBWAs9dWDm_7&index=21&ab_channel=QuoteTheGuy',
+            'https://www.youtube.com/watch?v=aNmZ9U8lE6g&list=PLlrQRD4Rfv_CM6byFKlMYeBWAs9dWDm_7&index=36&ab_channel=QuoteTheGuy',
+            'https://www.youtube.com/watch?v=41hvkx77nAU&list=PLlrQRD4Rfv_CVrEGTWM3r9EZa3jYUXs0N&index=5&ab_channel=QuoteTheGuy',
+            'https://www.youtube.com/watch?v=LH2-Ha6PgpA&list=PLlrQRD4Rfv_CVrEGTWM3r9EZa3jYUXs0N&index=35&ab_channel=QuoteTheGuy',
+            'https://www.youtube.com/watch?v=v-iDFxFC_9E&list=PLlrQRD4Rfv_CVrEGTWM3r9EZa3jYUXs0N&index=36&ab_channel=QuoteTheGuy',
+            'https://www.youtube.com/watch?v=frszEJb0aOo&list=PLlrQRD4Rfv_CNLUjhLBJg_pUfq207fPyD&index=7&ab_channel=QuoteTheGuy',
+            'https://www.youtube.com/watch?v=BOvcSLpOp4o&list=PLlrQRD4Rfv_CNLUjhLBJg_pUfq207fPyD&index=8&ab_channel=QuoteTheGuy',
+            'https://www.youtube.com/watch?v=37Q0fx5r-H8&list=PLlrQRD4Rfv_CNLUjhLBJg_pUfq207fPyD&index=15&ab_channel=QuoteTheGuy',
+            'https://www.youtube.com/watch?v=jBOMlWl7fFk&list=PLlrQRD4Rfv_CNLUjhLBJg_pUfq207fPyD&index=17&ab_channel=QuoteTheGuy',
+            'https://www.youtube.com/watch?v=J0BciHfsU7k&list=PLlrQRD4Rfv_CNLUjhLBJg_pUfq207fPyD&index=22&ab_channel=QuoteTheGuy'
+            ]
+
+    # select a random url
+    i = random.randint(0, len(urls)-1)
+    url = urls[i]
+
+    voice_channel = ctx.message.guild.voice_client
+
+    player = await YTDLSource.from_url(url, loop=client.loop)
+
+    voice_channel.play(player, after=lambda e: print('Player error: %s' % e) if e else None)
+
+    # don't have bot disconnect before it finishes
+    while voice_channel.is_playing():
+        sleep(1)
+
+    if voice_channel.is_connected():
+        await voice_channel.disconnect()
 
 
 # run bot

@@ -1,3 +1,11 @@
+# Version 2.0.0
+* Brand new feature!!
+* Obi-Wan Kenobot can now say an iconic quote in the voice chat!
+* Simply connect to a voice chat and then type /obitalk and Kenobot will join to say a line!
+* also minor cahnges to make code more readable
+* requirements.txt updated
+* README.md updated
+
 # Version 1.0.1
 * bot has been deployed on AWS instead of Heroku
 * removed Procfile

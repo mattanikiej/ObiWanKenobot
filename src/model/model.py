@@ -122,20 +122,22 @@ class Model:
         :param embedding_dim: number of dimensions for embedding layer
         """
 
-        inputs = keras.Input(self.input_shape_, name='input')
-
+        # MODEL ARCHITECTURE:
+        #
         # embedding layer to create a feature map of the initial vector
-        lyr = keras.layers.Embedding(input_dim=len(self.tokenizer_.word_index) + 1, output_dim=embedding_dim,
-                                     name='embedding')(inputs)
-
+        #
         # LSTM layer is the best way to understand NLP,
         # due to its memory components that allow it to understand sequences
-        lyr = keras.layers.LSTM(embedding_dim, name='lstm')(lyr)
-
+        #
         # flatten to 1D so that it's easier on the dense layer
-        lyr = keras.layers.Flatten(name='flatten')(lyr)
-
+        #
         # use softmax activation since all the labels are mutually exclusive
+        inputs = keras.Input(self.input_shape_, name='input')
+
+        lyr = keras.layers.Embedding(input_dim=len(self.tokenizer_.word_index) + 1, output_dim=embedding_dim,
+                                     name='embedding')(inputs)
+        lyr = keras.layers.LSTM(embedding_dim, name='lstm')(lyr)
+        lyr = keras.layers.Flatten(name='flatten')(lyr)
         outputs = keras.layers.Dense(13, activation='softmax', name='output')(lyr)
 
         self.model_ = keras.Model(inputs=inputs, outputs=outputs, name='ObiWan_Kenobot')
