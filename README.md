@@ -20,7 +20,7 @@ users input and sends out a random response for that category. To use the bot in
    
 __/obiwan \<message\>__  
 
-where \<message>\ is replaced with the message you want to send
+where \<message\> is replaced with the message you want to send
 
 ## Other Features
 * __/obitalk__
