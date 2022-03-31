@@ -1,3 +1,6 @@
+# Version 2.0.1
+* fixed README.md
+
 # Version 2.0.0
 * Brand new feature!!
 * Obi-Wan Kenobot can now say an iconic quote in the voice chat!

@@ -18,9 +18,9 @@ This is the simplest part. Make sure you are an admin on whatever server you wan
 The model uses the tensorflow machine learning library to create a text classification model. It then categorizes the
 users input and sends out a random response for that category. To use the bot in your Discord server use the command: 
    
-__/obiwan <message>__  
+__/obiwan \<message\>__  
 
-where <message> is replaced with the message you want to send
+where \<message>\ is replaced with the message you want to send
 
 ## Other Features
 * __/obitalk__
@@ -28,7 +28,7 @@ where <message> is replaced with the message you want to send
 
 ## Sources
 The data file was created myself using quotes found from the scripts found here: https://imsdb.com/ .   
-Audio was taken from Youtube videos.
+Audio was taken from Youtube videos. The urls for those can be found in src/bot.py in the obitalk function.
 
 ## Authors
 Matt Anikiej
