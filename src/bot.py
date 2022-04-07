@@ -10,13 +10,9 @@ import random
 client = commands.Bot(command_prefix='/')
 token = os.getenv("OBI_WAN_KENOBOT_TOKEN")
 
-# train the model
-# Since this is only ran once and is a fairly inexpensive computation,
-# it is better to train since loading weights tends to make it have a lower accuracy
-# due to LSTM cell sates not saving.
-# THIS WILL MOST LIKELY BE CHANGED IN THE FUTURE WHEN I FIGURE OUT HOW TO BETTER SAVE MODEL!!!!
-model = Model()
-model.train()
+# load pretrained model in
+model = Model(data_path='data/obiwanintents.json')
+model.load_model('model/saved_models/obiwankenobot')
 
 
 @client.event

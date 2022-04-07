@@ -1,3 +1,11 @@
+# Version 2.2.0
+* chatbot 2.0!!
+* Many improvements have been made to the model that obi wan uses
+* trained until loss didn't improve for 5 epochs
+* does not need to train every time the bot starts running
+    * SIGNIFICANTLY reduces computation strain
+* new test function added to Model
+
 # Version 2.1.0
 * fixed apostrophe bug (it just disappeared)
 * changed /obiwan to /obichat since it's not the only feature of the bot anymore

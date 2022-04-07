@@ -18,7 +18,7 @@ class Model:
     #
     # CONSTRUCTORS
     #
-    def __init__(self, data_path='data/obiwanintents.json'):
+    def __init__(self, data_path='../data/obiwanintents.json'):
         """
         Constructor for the model
         """
@@ -85,8 +85,6 @@ class Model:
         data = pd.DataFrame({"inputs": inputs,
                              "labels": labels})
 
-        # shuffle the data
-        data = data.sample(frac=1).reset_index(drop=True)
 
         data['labels'].replace(label_map, inplace=True)
 
@@ -164,7 +162,7 @@ class Model:
         """
         X = self.__tokenize_initial_data()
         return self.model_.fit(X, self.data_['labels'],
-                               epochs=100,
+                               epochs=10000,
                                callbacks=[tf.keras.callbacks.EarlyStopping(patience=5, monitor='loss')])
 
     def save_model(self, name="model"):
@@ -174,12 +172,14 @@ class Model:
         """
         self.model_.save_weights('saved_models/'+name)
 
-    def load_model(self, name="model"):
+    def load_model(self, path='saved_models/model'):
         """
         loads the weights from the file with the given name
-        :param name: name of the file to load in saved_models/
+        :param path: path to the file to load in
         """
-        self.model_.load_weights('saved_models/'+name)
+        self.model_.load_weights(path)
+        self.model_.compile(loss="sparse_categorical_crossentropy",
+                            optimizer='adam', metrics=['accuracy'])
 
     def chat(self, user_input):
         """
@@ -202,3 +202,39 @@ class Model:
         responses = self.responses_[tag]
         i = random.randint(0, len(responses)-1)
         return responses[i]
+
+    def test(self):
+        """
+        Used to test the accuracy of the model
+        """
+        greeting = ['how are you', 'greeting']
+        goodbye = ['See you later.', 'goodbye']
+        thanks = ['Thank you so much!', 'thanks']
+        tasks = ['What can you do?', 'tasks']
+        alive = ['Are you even alive at all?', 'alive']
+        hlp = ['PLease I need your help!', 'help']
+        mission = ['Can you tell me a little bit about your mission?', 'mission']
+        jedi = ['are you a jedi?', 'jedi']
+        sith = ['Who is the most evil sith in the galaxy?', 'sith']
+        bounty = ['Do you know of Jango Fett?', 'bounty hunter']
+        funny = ['I know you know some good jokes', 'funny']
+        stories = ['Cmon, tell me a story!', 'stories']
+        threat = ['I will fight you', 'threat']
+
+        messages = [greeting, goodbye, thanks, tasks, alive, hlp, mission, jedi, sith, bounty, funny, stories, threat]
+
+        correct = 0
+        for msg in messages:
+            msg[0] = self.__standardize_text(msg[0])
+            X = self.tokenizer_.texts_to_sequences([msg[0]])
+            X = [item for i in X for item in i]
+            X = pad_sequences([X], self.input_shape_)
+            pred = self.model_.predict(X)
+            pred = pred.argmax()
+            print('Pred: {} Actual: {}'.format(self.label_map_[pred], msg[1]))
+            if self.label_map_[pred] == msg[1]:
+                correct += 1
+            print()
+
+        accuracy = correct / len(messages)
+        print('Accuracy = {:.2f}'.format(accuracy))
