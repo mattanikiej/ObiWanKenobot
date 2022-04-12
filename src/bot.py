@@ -7,7 +7,7 @@ from time import sleep
 import random
 
 # sets up client and command prefix
-client = commands.Bot(command_prefix='/')
+client = commands.Bot(command_prefix='$')
 token = os.getenv("OBI_WAN_KENOBOT_TOKEN")
 
 # load pretrained model in
@@ -23,11 +23,28 @@ async def on_ready():
     await client.change_presence(status=discord.Status.online, activity=discord.Game("Podracing"))
 
 
-# command /obichat
+# command $help
+@client.command()
+async def help(ctx):
+    """
+    Use case: $help
+    Displays all commands
+    :param ctx: context of the client
+    """
+    help_msg = """
+    Obi-Wan Kenobot Commands:
+    $obichat <message> -  use to send a message to obiwan and he will respond in chat
+    $obitalk - use while in a voice channel to invite obiwan and have him say a line
+    $sjj - use to play Secret JarJar NOT FINISHED
+    """
+    await ctx.send(help_msg)
+
+
+# command $obichat
 @client.command()
 async def obichat(ctx, *message):
     """
-    Use case: /obichat <message>
+    Use case: $obichat <message>
     Used to talk to the chat bot by sending a message, and then the bot replies.
     If no message is sent then the bot responds with 'Hello there!'
     :param ctx: context of the client
@@ -42,11 +59,11 @@ async def obichat(ctx, *message):
         await ctx.send(response)
 
 
-# command /obitalk
+# command $obitalk
 @client.command(pass_context=True)
 async def obitalk(ctx):
     """
-    Use case: /obitalk
+    Use case: $obitalk
     Used for obiwan to talk in the voice channel the user is currently connected to
     :param ctx: context of the call
     """
@@ -92,6 +109,12 @@ async def obitalk(ctx):
 
     if voice_channel.is_connected():
         await voice_channel.disconnect()
+
+
+# command $sjj
+@client.command()
+async def sjj(ctx):
+    pass
 
 
 # run bot

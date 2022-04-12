@@ -85,7 +85,6 @@ class Model:
         data = pd.DataFrame({"inputs": inputs,
                              "labels": labels})
 
-
         data['labels'].replace(label_map, inplace=True)
 
         # standardize all text to be lowercase and no punctuation

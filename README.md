@@ -18,13 +18,18 @@ This is the simplest part. Make sure you are an admin on whatever server you wan
 The model uses the tensorflow machine learning library to create a text classification model. It then categorizes the
 users input and sends out a random response for that category. To use the bot in your Discord server use the command: 
    
-__/obichat \<message\>__  
+__$obichat \<message\>__  
 
 where \<message\> is replaced with the message you want to send
 
 ## Other Features
-* __/obitalk__
+* __$help__
+    * displays all commands and what they do
+* __$obitalk__
   * Will join the channel the user is currently in and say a movie quote
+* __$sjj__
+    * starts a game of secret jar jar
+    * NOT FINISHED SO DOES NOTHING RIGHT NOW
 
 ## Sources
 The data file was created myself using quotes found from the scripts found here: https://imsdb.com/ .   

@@ -1,3 +1,8 @@
+# Version 2.3.0
+* Changed command prefix to $ from /
+* added help command
+* added skeleton of secret jar jar
+
 # Version 2.2.0
 * chatbot 2.0!!
 * Many improvements have been made to the model that obi wan uses
