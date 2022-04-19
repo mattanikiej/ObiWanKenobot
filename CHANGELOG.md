@@ -1,3 +1,9 @@
+# Version 2.3.1
+* Changed command prefix to ob! from $
+* Changed some commands to be easier to use (in README.md)
+* Updated README.md
+* added docstring and option to select number of players in secret jarjar
+
 # Version 2.3.0
 * Changed command prefix to $ from /
 * added help command

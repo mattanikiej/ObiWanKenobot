@@ -1,13 +1,16 @@
 import discord
 from discord.ext import commands
-from model.model import Model
+
 import os
-from YTDLSource import YTDLSource
 from time import sleep
 import random
 
+from model.model import Model
+from SecretJarJar.secret_jarjar import SecretJarJar
+from YTDLSource import YTDLSource
+
 # sets up client and command prefix
-client = commands.Bot(command_prefix='$')
+client = commands.Bot(command_prefix='ob!', help_command=None)
 token = os.getenv("OBI_WAN_KENOBOT_TOKEN")
 
 # load pretrained model in
@@ -23,28 +26,28 @@ async def on_ready():
     await client.change_presence(status=discord.Status.online, activity=discord.Game("Podracing"))
 
 
-# command $help
+# command ob!help
 @client.command()
 async def help(ctx):
     """
-    Use case: $help
+    Use case: ob!help
     Displays all commands
     :param ctx: context of the client
     """
     help_msg = """
-    Obi-Wan Kenobot Commands:
-    $obichat <message> -  use to send a message to obiwan and he will respond in chat
-    $obitalk - use while in a voice channel to invite obiwan and have him say a line
-    $sjj - use to play Secret JarJar NOT FINISHED
+    Obi-Wan Kenobot Commands (prefix=ob!):
+    **chat <message>** -  use to send a message to obiwan and he will respond in chat
+    **talk** - use while in a voice channel to invite obiwan and have him say a line
+    **sjj** - use to play Secret JarJar NOT FINISHED
     """
     await ctx.send(help_msg)
 
 
-# command $obichat
+# command ob!chat
 @client.command()
-async def obichat(ctx, *message):
+async def chat(ctx, *message):
     """
-    Use case: $obichat <message>
+    Use case: ob!chat <message>
     Used to talk to the chat bot by sending a message, and then the bot replies.
     If no message is sent then the bot responds with 'Hello there!'
     :param ctx: context of the client
@@ -59,11 +62,11 @@ async def obichat(ctx, *message):
         await ctx.send(response)
 
 
-# command $obitalk
+# command ob!talk
 @client.command(pass_context=True)
-async def obitalk(ctx):
+async def talk(ctx):
     """
-    Use case: $obitalk
+    Use case: ob!talk
     Used for obiwan to talk in the voice channel the user is currently connected to
     :param ctx: context of the call
     """
@@ -111,11 +114,21 @@ async def obitalk(ctx):
         await voice_channel.disconnect()
 
 
-# command $sjj
+# command ob!sjj
 @client.command()
-async def sjj(ctx):
-    pass
-
+async def sjj(ctx, num_players=5):
+    """
+    Use case: ob!sjj <num_players>
+    Used to start a game of secret jar jar.
+    The game begins when all players reacted to the message to join.
+    :param ctx: context of the command
+    :param num_players: number of players to join. Must be >= 5
+    """
+    # minimum number of players is 5
+    if num_players < 5:
+        await ctx.send('How did this happen, we\'re smarter than this! The number of players must be greater than 5')
+        return
+    game = SecretJarJar([num_players])
 
 # run bot
 client.run(token)

@@ -1,5 +1,5 @@
-from player import Player
-from game_board import GameBoard
+from SecretJarJar.player import Player
+from SecretJarJar.game_board import GameBoard
 
 
 class SecretJarJar:
